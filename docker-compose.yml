@@ -1,0 +1,27 @@
+version: "3"
+services:
+  wireguard:
+    image: lscr.io/linuxserver/wireguard
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Tokyo
+      - SERVERURL=vpn.example.com #optional
+      - SERVERPORT=443 #optional
+      - PEERS=1 #optional
+      - PEERDNS=auto #optional
+      - INTERNAL_SUBNET=10.13.13.0 #optional
+      - ALLOWEDIPS=0.0.0.0/0 #optional
+      - LOG_CONFS=true #optional
+    volumes:
+      - ./wireguard_data/config:/config
+      - /lib/modules:/lib/modules
+    ports:
+      - 443:51820/udp # ポートを変更していれば左側を変更
+    # sysctls: # クライアントモードで使用する
+    # - net.ipv4.conf.all.src_valid_mark=1
+    restart: unless-stopped
